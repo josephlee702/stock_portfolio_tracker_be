@@ -2,7 +2,7 @@ require "faraday"
 require "json"
 
 class MarketDataService
-  BASE_URL = ""
+  BASE_URL = "https://pro-api.coinmarketcap.com"
 
   def initialize
     @conn = Faraday.new(url: BASE_URL) do |faraday|
