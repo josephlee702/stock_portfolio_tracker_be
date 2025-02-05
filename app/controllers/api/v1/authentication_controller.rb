@@ -1,7 +1,7 @@
 class Api::V1::AuthenticationController < ApplicationController
   require "jwt"
 
-  #POST function - /api/vi/signup
+  #POST function - /api/v1/signup
   #this function creates a user and generates a JWT token, which will let the user stay logged into the site
   def signup
     user = User.new(user_params)
