@@ -1,5 +1,6 @@
 class Api::V1::UsersController < ApplicationController
   before_action :set_user, only: [:show, :update, :destroy]
+  before_action :authorize_request, only: [:show]
 
   def index
     users = User.all
@@ -45,5 +46,16 @@ class Api::V1::UsersController < ApplicationController
 
   def user_params
     params.require(:user).permit(:name, :email, :password, :password_confirmation)
+  end
+
+  def authorize_request
+    header = request.headers["Authorization"]
+    token = header.split(" ").last if header
+    begin
+      decoded = JWT.decode(token, Rails.application.secrets.secret_key_base, true, algorithm: "HS256")
+      @current_user = User.find(decoded[0]["user_id"])
+    rescue ActiveRecord::RecordNotFound, JWT::DecodeError
+      render json: { error: "Unauthorized" }, status: 401
+    end
   end
 end
