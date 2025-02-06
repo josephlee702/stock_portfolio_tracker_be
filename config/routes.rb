@@ -10,6 +10,8 @@ Rails.application.routes.draw do
       resources :users, only: [:index, :show]
       post "signup", to: "authentication#signup"
       post "login", to: "authentication#login"
+
+      resources :assets, only: [:show], param: :symbol
     end
   end
 end
