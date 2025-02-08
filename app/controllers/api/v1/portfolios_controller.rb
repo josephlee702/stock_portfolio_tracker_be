@@ -21,11 +21,16 @@ class Api::V1::PortfoliosController < ApplicationController
   end
 
   def update
-
+    if @portfolio.update(portfolio_params)
+      render json: @portfolio, status: 200
+    else
+      render json: { error: @portfolio.errors.full_messages }, status: 402
+    end
   end
 
   def destroy
-
+    @portfolio.destroy
+    render json: { message: "Portfolio was deleted successfully." }, status: 200
   end
 
   private
