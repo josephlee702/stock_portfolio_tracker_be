@@ -1,8 +1,10 @@
 class Api::V1::PortfoliosController < ApplicationController
+  before_action :authenticate_user
   before_action :set_portfolio, only: [:show, :update, :destroy]
+  before_action :authorize_user, only: [:show, :update, :destroy]
 
   def index
-    portfolios = Portfolio.all 
+    portfolios = current_user.portfolios
     render json: portfolios, status: 200
   end
 
