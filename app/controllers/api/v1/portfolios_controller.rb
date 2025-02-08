@@ -44,4 +44,8 @@ class Api::V1::PortfoliosController < ApplicationController
     @portfolio = Portfolio.find_by(id: params[:id])
     render json: { error: "Portfolio not found." }, status: 404 unless @portfolio
   end
+
+  def authorize_user
+    render json: { error: "Not authorized." }, status: 401 unless @portfolio.user == current_user
+  end
 end
