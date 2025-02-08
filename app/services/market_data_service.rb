@@ -2,23 +2,30 @@ require "faraday"
 require "json"
 
 class MarketDataService
-  BASE_URL = "https://pro-api.coinmarketcap.com"
-
-  def initialize
-    @conn = Faraday.new(url: BASE_URL) do |faraday|
-      faraday.request :url_encoded
-      faraday.response :json, content_type: /\bjson$/
-      faraday.adapter Faraday.default_adapter
-    end
-  end
 
   def fetch_asset_price(symbol)
-    response = @conn.get("/v1/assets/#{symbol}") do |req|
-      req.headers["Authorization"] = "Bearer #{ ENV["API_KEY"] }"
+    #this is passed as a header to authenticate the request
+    api_key = Rails.application.credentials.coinmarketcap_api_key
+    url = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=#{symbol}&convert=USD"
+
+    response = Faraday.get(url) do |req|
+      req.headers["X-CMC_PRO_API_KEY"] = api_key
+      req.headers["Accept"] = "application/json"
     end
 
-    return JSON.parse(response.body) if response.success?
-
-    { error: "Failed to fetch asset price" }
+    if response.success?
+      data = JSON.parse(response.body)
+      asset = data.dig("data", symbol.upcase)
+      
+      if asset
+        return { price: asset["quote"]["USD"]["price"].round(2) }
+      else
+        return { error: "Asset not found" }
+      end
+    else
+      return { error: "Failed to fetch asset price" }
+    end
+  rescue StandardError => e
+    return { error: "Failed to fetch asset price" }
   end
 end
