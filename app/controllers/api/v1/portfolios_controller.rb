@@ -7,11 +7,17 @@ class Api::V1::PortfoliosController < ApplicationController
   end
 
   def show
-    
+    render json: @portfolio, include: :assets, status: 200
   end
 
   def create
+    portfolio = Portfolio.new(portfolio_params)
 
+    if portfolio.save
+      render json: portfolio, status: 201
+    else
+      render json: { error: portfolio.errors.full_messages }, status: 402
+    end
   end
 
   def update
@@ -30,6 +36,7 @@ class Api::V1::PortfoliosController < ApplicationController
   
   #designates portfolio to perform show, update and destroy actions on
   def set_portfolio
-
+    @portfolio = Portfolio.find_by(id: params[:id])
+    render json: { error: "Portfolio not found." }, status: 404 unless @portfolio
   end
 end
