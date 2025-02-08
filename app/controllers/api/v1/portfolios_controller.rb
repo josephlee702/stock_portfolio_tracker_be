@@ -1,12 +1,13 @@
 class Api::V1::PortfoliosController < ApplicationController
-  before_action :set_portfolio, only [:show, :update, :destroy]
+  before_action :set_portfolio, only: [:show, :update, :destroy]
 
   def index
-
+    portfolios = Portfolio.all 
+    render json: portfolios, status: 200
   end
 
   def show
-
+    
   end
 
   def create
