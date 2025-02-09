@@ -15,6 +15,7 @@ Rails.application.routes.draw do
       resources :assets, only: [:show], param: :symbol
       #/api/v1/portfolios(/:id)
       resources :portfolios, only: [:index, :show, :create, :update, :destroy]
+      resources :transactions, only: [:index, :show]
     end
   end
 end
