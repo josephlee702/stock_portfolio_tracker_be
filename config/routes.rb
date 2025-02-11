@@ -14,6 +14,7 @@ Rails.application.routes.draw do
       #/api/v1/portfolios(/:id)
       resources :portfolios, only: [:index, :show, :create, :update, :destroy] do
         resources :assets
+        resources :transactions
       end
       resources :transactions, only: [:index, :show]
     end
