@@ -11,10 +11,10 @@ Rails.application.routes.draw do
       post "signup", to: "authentication#signup"
       post "login", to: "authentication#login"
 
-      #/api/v1/assets/symbol
-      resources :assets
       #/api/v1/portfolios(/:id)
-      resources :portfolios, only: [:index, :show, :create, :update, :destroy]
+      resources :portfolios, only: [:index, :show, :create, :update, :destroy] do
+        resources :assets
+      end
       resources :transactions, only: [:index, :show]
     end
   end
