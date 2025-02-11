@@ -16,7 +16,6 @@ Rails.application.routes.draw do
         resources :assets
         resources :transactions
       end
-      resources :transactions, only: [:index, :show]
     end
   end
 end
