@@ -32,8 +32,8 @@ class Api::V1::AuthenticationController < ApplicationController
   end
 
   def generate_jwt_token(user)
-    # {stores user ID into the token, token expires in 24 hours}
-    payload = { user_id: user.id, exp: 24.hours.from_now.to_i } 
+    # {stores user ID into the token}
+    payload = { user_id: user.id } 
     # get secret key to sign the token - prevents forgery
     secret = Rails.application.secrets.secret_key_base
     # encoding using HS256 algo
