@@ -12,7 +12,7 @@ Rails.application.routes.draw do
       post "login", to: "authentication#login"
 
       #/api/v1/assets/symbol
-      resources :assets, param: :symbol
+      resources :assets
       #/api/v1/portfolios(/:id)
       resources :portfolios, only: [:index, :show, :create, :update, :destroy]
       resources :transactions, only: [:index, :show]
