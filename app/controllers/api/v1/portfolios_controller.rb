@@ -9,6 +9,11 @@ class Api::V1::PortfoliosController < ApplicationController
   end
 
   def show
+    @portfolio.assets.each do |asset|
+      market_data = MarketDataService.new.fetch_asset_price(asset.symbol)
+      asset.update(market_price: market_data[:price]) if market_data[:price]
+    end
+
     render json: @portfolio, include: :assets, status: 200
   end
 
