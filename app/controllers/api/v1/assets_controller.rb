@@ -15,6 +15,10 @@ class Api::V1::AssetsController < ApplicationController
   def create
     #using .build automatically associates the asset with the portfolio (child with the parent)
     asset = @portfolio.assets.build(asset_params)
+
+    market_data = MarketDataService.new.fetch_asset_price(asset.symbol)
+    asset.update(market_price: market_data[:price]) if market_data[:price]
+
     if asset.save
       render json: asset, status: 201
     else
@@ -48,6 +52,6 @@ class Api::V1::AssetsController < ApplicationController
   end
 
   def asset_params
-    params.require(:asset).permit(:symbol, :name, :quantity)
+    params.require(:asset).permit(:symbol, :name, :quantity, :asset_type)
   end
 end
