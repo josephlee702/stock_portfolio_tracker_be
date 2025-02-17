@@ -19,7 +19,7 @@ class Api::V1::AssetsController < ApplicationController
     market_data = MarketDataService.new.fetch_asset_price(asset.symbol)
 
     if market_data[:error] == "Asset not found"
-      return render json: { message: "Asset was not found. Please input a valid symbol for your asset." }, status: 422
+      return render json: { errors: "Asset was not found. Please input a valid symbol for your asset." }, status: 422
     else
       asset.update(market_price: market_data[:price]) if market_data[:price]
     end
