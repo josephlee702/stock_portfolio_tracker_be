@@ -41,7 +41,11 @@ class Api::V1::AssetsController < ApplicationController
 
   def destroy
     @asset.destroy
-    render json: { message: "Asset was deleted successfully." }, status: 202
+    if @asset.destroy
+      render json: { message: "Asset was deleted successfully." }, status: 202
+    else
+      render json: { error: "Asset was not deleted successfully." }, status: 422
+    end
   end
 
   private
