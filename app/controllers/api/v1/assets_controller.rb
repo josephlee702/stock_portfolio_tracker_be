@@ -16,7 +16,11 @@ class Api::V1::AssetsController < ApplicationController
     #using .build automatically associates the asset with the portfolio (child with the parent)
     asset = @portfolio.assets.build(asset_params)
 
-    market_data = MarketDataService.new.fetch_asset_price(asset.symbol)
+    if asset.asset_type == "crypto"
+      market_data = CryptoApiService.new.fetch_asset_price(asset.symbol)
+    else
+      market_data = StockApiService.new.fetch_asset_price(asset.symbol)
+    end
 
     if market_data[:error] == "Asset not found"
       return render json: { errors: "Asset was not found. Please input a valid symbol for your asset." }, status: 422
@@ -40,7 +44,6 @@ class Api::V1::AssetsController < ApplicationController
   end
 
   def destroy
-    @asset.destroy
     if @asset.destroy
       render json: { message: "Asset was deleted successfully." }, status: 202
     else
