@@ -4,6 +4,7 @@ class Api::V1::AssetsController < ApplicationController
   before_action :set_asset, only: [:show, :update, :destroy]
 
   def index
+    require 'pry'; binding.pry
     assets = @portfolio.assets
     render json: assets
   end
@@ -17,7 +18,12 @@ class Api::V1::AssetsController < ApplicationController
     asset = @portfolio.assets.build(asset_params)
 
     market_data = MarketDataService.new.fetch_asset_price(asset.symbol)
-    asset.update(market_price: market_data[:price]) if market_data[:price]
+
+    if market_data.is_a?(Hash) && market_data[:error]
+      render json: { message: "Asset was not found." }, status: 422
+    else
+      asset.update(market_price: market_data[:price]) if market_data[:price]
+    end
 
     if asset.save
       render json: asset, status: 201
