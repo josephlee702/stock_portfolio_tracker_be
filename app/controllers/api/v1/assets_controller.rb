@@ -4,7 +4,6 @@ class Api::V1::AssetsController < ApplicationController
   before_action :set_asset, only: [:show, :update, :destroy]
 
   def index
-    require 'pry'; binding.pry
     assets = @portfolio.assets
     render json: assets
   end
