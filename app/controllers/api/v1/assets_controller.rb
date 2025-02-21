@@ -15,18 +15,8 @@ class Api::V1::AssetsController < ApplicationController
   def create
     #using .build automatically associates the asset with the portfolio (child with the parent)
     asset = @portfolio.assets.build(asset_params)
-
-    if asset.asset_type == "crypto"
-      market_data = CryptoApiService.new.fetch_asset_price(asset.symbol)
-    else
-      market_data = StockApiService.new.fetch_asset_price(asset.symbol)
-    end
-
-    if market_data[:error] == "Asset not found"
-      return render json: { errors: "Asset was not found. Please input a valid symbol for your asset." }, status: 422
-    else
-      asset.update(market_price: market_data[:price]) if market_data[:price]
-    end
+    market_price = fetch_market_price(asset.symbol, asset.asset_type)
+    asset.market_price = market_price unless market_price.nil?
 
     if asset.save
       render json: asset, status: 201
@@ -65,5 +55,24 @@ class Api::V1::AssetsController < ApplicationController
 
   def asset_params
     params.require(:asset).permit(:symbol, :name, :quantity, :asset_type)
+  end
+
+  def fetch_market_price(symbol, asset_type)
+    if asset_type == "stock"
+      market_data = StockApiService.new.fetch_asset_price(symbol)
+      return market_data[:price] if market_data[:price]
+  
+      # trying the crypto API if the stock API fails (incorrect input by User)
+      market_data = CryptoApiService.new.fetch_asset_price(symbol)
+      return market_data[:price] if market_data[:price]
+    else
+      market_data = CryptoApiService.new.fetch_asset_price(symbol)
+      return market_data[:price] if market_data[:price]
+  
+      market_data = StockApiService.new.fetch_asset_price(symbol)
+      return market_data[:price] if market_data[:price]
+    end
+  
+    nil
   end
 end
