@@ -4,7 +4,7 @@ class Api::V1::PortfoliosController < ApplicationController
   before_action :authorize_user, only: [:show, :update, :destroy]
 
   def index
-    render json: current_user.portfolios, status: 200
+    render json: current_user.portfolios.as_json(methods: :total_market_value), status: 200
   end
 
   def show
@@ -16,7 +16,7 @@ class Api::V1::PortfoliosController < ApplicationController
       end
     end
 
-    render json: @portfolio, include: :assets, status: 200
+    render json: @portfolio.as_json(methods: :total_market_value), status: 200
   end
 
   def create

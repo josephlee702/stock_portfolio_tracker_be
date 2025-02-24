@@ -4,7 +4,6 @@ class Portfolio < ApplicationRecord
   has_many :transactions, dependent: :destroy
 
   def total_market_value
-    market_value = assets.sum { |asset| asset.market_price * asset.quantity }
-    market_value.toFixed(2)
+    assets.sum { |asset| asset.market_price.to_f * asset.quantity.to_f }
   end
 end
