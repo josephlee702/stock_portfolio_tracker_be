@@ -15,14 +15,14 @@ class Api::V1::AssetsController < ApplicationController
   def create
     #using .build automatically associates the asset with the portfolio (child with the parent)
     asset = @portfolio.assets.build(asset_params)
-    market_price = fetch_market_price(asset.symbol, asset.asset_type)
-    asset.market_price = market_price unless market_price.nil?
 
+    asset.market_price = MarketDataService.fetch_price(asset.symbol, asset.asset_type)
+  
     if asset.save
       render json: asset, status: 201
     else
       render json: asset.errors, status: 422
-    end
+    end    
   end
 
   def update
@@ -55,24 +55,5 @@ class Api::V1::AssetsController < ApplicationController
 
   def asset_params
     params.require(:asset).permit(:symbol, :name, :quantity, :asset_type)
-  end
-
-  def fetch_market_price(symbol, asset_type)
-    if asset_type == "stock"
-      market_data = StockApiService.new.fetch_asset_price(symbol)
-      return market_data[:price] if market_data[:price]
-  
-      # trying the crypto API if the stock API fails (incorrect input by User)
-      market_data = CryptoApiService.new.fetch_asset_price(symbol)
-      return market_data[:price] if market_data[:price]
-    else
-      market_data = CryptoApiService.new.fetch_asset_price(symbol)
-      return market_data[:price] if market_data[:price]
-  
-      market_data = StockApiService.new.fetch_asset_price(symbol)
-      return market_data[:price] if market_data[:price]
-    end
-  
-    nil
   end
 end
