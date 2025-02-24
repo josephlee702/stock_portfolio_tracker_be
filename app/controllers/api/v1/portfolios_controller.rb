@@ -4,18 +4,15 @@ class Api::V1::PortfoliosController < ApplicationController
   before_action :authorize_user, only: [:show, :update, :destroy]
 
   def index
-    portfolios = current_user.portfolios
-    render json: portfolios, status: 200
+    render json: current_user.portfolios, status: 200
   end
 
   def show
     @portfolio.assets.each do |asset|
       if asset.asset_type == "crypto"
-        market_data = CryptoApiService.new.fetch_asset_price(asset.symbol)
-        asset.update(market_price: market_data[:price]) if market_data[:price]
+        market_data = MarketDataService.fetch_price(asset.symbol, asset.asset_type)
       else
-        market_data = StockApiService.new.fetch_asset_price(asset.symbol)
-        asset.update(market_price: market_data[:price])
+        market_data = MarketDataService.new.fetch_price(asset.symbol, asset.asset_type)
       end
     end
 
