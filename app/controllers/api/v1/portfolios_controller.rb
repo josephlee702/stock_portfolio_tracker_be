@@ -12,7 +12,7 @@ class Api::V1::PortfoliosController < ApplicationController
       if asset.asset_type == "crypto"
         market_data = MarketDataService.fetch_price(asset.symbol, asset.asset_type)
       else
-        market_data = MarketDataService.new.fetch_price(asset.symbol, asset.asset_type)
+        market_data = MarketDataService.fetch_price(asset.symbol, asset.asset_type)
       end
     end
 
