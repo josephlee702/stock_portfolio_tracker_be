@@ -29,6 +29,8 @@ gem "turbo-rails"
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 gem "bcrypt", "~> 3.1.7"
 gem "jwt", "~> 2.7"
+gem 'omniauth', '>= 1.0.0'
+gem 'omniauth-oauth2'
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[ windows jruby ]
@@ -64,3 +66,5 @@ group :test do
   gem "selenium-webdriver"
 end
 
+
+gem "devise_token_auth", "~> 1.2"
