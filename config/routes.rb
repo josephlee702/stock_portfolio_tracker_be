@@ -10,8 +10,7 @@ Rails.application.routes.draw do
       resources :users, only: [:index, :show]
 
       mount_devise_token_auth_for 'User', at: "auth"
-      
-      post "signup", to: "authentication#signup"
+
       post "login", to: "sessions#login"
       delete "logout", to: "sessions#destroy"
 
