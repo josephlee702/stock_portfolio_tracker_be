@@ -10,10 +10,7 @@ Rails.application.routes.draw do
       resources :users, only: [:index, :show]
 
       mount_devise_token_auth_for 'User', at: "auth"
-
-      post "login", to: "sessions#login"
-      delete "logout", to: "sessions#destroy"
-
+      
       #/api/v1/portfolios(/:id)
       resources :portfolios, only: [:index, :show, :create, :update, :destroy] do
         resources :assets
