@@ -7,10 +7,10 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      resources :users, only: [:index, :show]
-
+      
       mount_devise_token_auth_for 'User', at: "auth"
       
+      resources :users, only: [:index, :show]
       #/api/v1/portfolios(/:id)
       resources :portfolios, only: [:index, :show, :create, :update, :destroy] do
         resources :assets
