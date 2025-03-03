@@ -1,5 +1,5 @@
 class Api::V1::TransactionsController < ApplicationController
-  before_action :authenticate_user
+  # before_action :authenticate_user
   before_action :set_portfolio
   before_action :set_transaction, only: [:show, :update, :destroy]
 

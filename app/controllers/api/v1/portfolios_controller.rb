@@ -1,9 +1,13 @@
 class Api::V1::PortfoliosController < ApplicationController
+  # before_action :authenticate_user!
   before_action :set_portfolio, only: [:show, :update, :destroy]
-  before_action :authorize_user, only: [:show, :update, :destroy]
 
   def index
-    render json: current_user.portfolios.as_json(methods: :total_market_value), status: 200
+    if current_user
+      render json: current_user.portfolios.as_json(methods: :total_market_value), status: :ok
+    else
+      render json: { error: "Unauthorized" }, status: :unauthorized
+    end
   end
 
   def show
