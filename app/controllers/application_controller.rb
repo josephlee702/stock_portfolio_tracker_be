@@ -4,9 +4,9 @@ class ApplicationController < ActionController::API
   before_action :configure_permitted_parameters, if: :devise_controller?
 
 
-  def current_user
-    @current_user
-  end
+  # def current_user
+  #   @current_user
+  # end
 
   protected
 

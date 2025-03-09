@@ -3,6 +3,7 @@ class Api::V1::PortfoliosController < ApplicationController
   before_action :set_portfolio, only: [:show, :update, :destroy]
 
   def index
+    require 'pry'; binding.pry
     if current_user
       render json: current_user.portfolios.as_json(methods: :total_market_value), status: :ok
     else
